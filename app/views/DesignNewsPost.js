@@ -3,19 +3,14 @@ import { Text, View, TouchableWithoutFeedback, PanResponder } from 'react-native
 
 export default class DesignNewsPost extends Component {
 
+  render(){
 
-  componentWillMount(){
-
-    var colors = ["#462446","#B05F6D","#EB6B56","#47B39D","#E6567A","#BF4A67","#47C9AF","#337ab7"];
-    var r = Math.floor(Math.random()*colors.length);
-    var bgcolor = colors[r]
-
-    this.styles = {
+    var styles = {
       container:{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: bgcolor,
+        backgroundColor: this.props.bgcolor,
         padding:20  
       },
       eybrow: {
@@ -32,7 +27,6 @@ export default class DesignNewsPost extends Component {
         lineHeight:45,
         color: "#fff",
         textAlign: 'center',
-        margin: 10,
       },
       body: {
         fontFamily: 'Avenir',
@@ -57,26 +51,22 @@ export default class DesignNewsPost extends Component {
       },
     }
 
-  }
-
-  render(){
-
     return(
-      <View style={ this.styles.container }  >
+      <View style={ styles.container }  >
 
-        <Text style={ this.styles.eybrow}>
+        <Text style={ styles.eybrow}>
           { this.props.publisher }
         </Text>
 
-        <Text style={ this.styles.headline}>
+        <Text style={ styles.headline}>
           {this.props.title}
         </Text>
 
-        <Text style={ this.styles.body}>
+        <Text style={ styles.body}>
           { this.props.body }
         </Text>
 
-        <Text style={ this.styles.readmore }>
+        <Text style={ styles.readmore }>
           READ MORE
         </Text>
 
