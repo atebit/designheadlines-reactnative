@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableWithoutFeedback, PanResponder } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 
 export default class DesignNewsPost extends Component {
+  
+
 
   render(){
 

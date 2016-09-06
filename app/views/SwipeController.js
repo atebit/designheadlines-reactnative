@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated, PanResponder, Dimensions } from 'react-native';
+import { View, Animated, PanResponder, Dimensions, AlertIOS } from 'react-native';
 import DesignNewsPost from './DesignNewsPost';
 
 export default class SwipeController extends Component {
@@ -14,9 +14,13 @@ export default class SwipeController extends Component {
       cx:0, 
       // cy:0, // current
       dx:0, 
-      // dy:0, // distance
+      dy:0, // distance
       ox:0, 
       // oy:0, // offset
+      timestamps: {
+        start:0, 
+        end:0
+      },
       isAnimating: false,
     }
 
@@ -35,10 +39,12 @@ export default class SwipeController extends Component {
       onPanResponderGrant: (evt, gestureState) => {
         // console.log("gesture start", this.store.ox, gestureState.dx);
         this.store.dx = 0;
+        this.store.timestamps.start = evt.nativeEvent.timestamp;
       },
       onPanResponderMove: (evt, gestureState) => {
         // console.log("gesture move", this.store.ox, gestureState.dx);
         this.store.dx = gestureState.dx;
+        this.store.dy = gestureState.dy;
         if( this.store.currentPage == 0 ){
           if( this.store.dx > 20 ){
             this.store.dx = 20;
@@ -48,17 +54,43 @@ export default class SwipeController extends Component {
       },
       onPanResponderTerminationRequest: (evt, gestureState) => true,
       onPanResponderRelease: (evt, gestureState) => {
-        // console.log("gesture end", this.store.ox);
         // this.store.dx = gestureState.dx;
-        this.onDragEnd();
+        this.store.timestamps.end = evt.nativeEvent.timestamp;
+          // just a tap really..
+        var fast = (this.store.timestamps.end - this.store.timestamps.start) < 350;
+        var notFar = ((Math.abs(gestureState.dx) < 2) && (Math.abs(gestureState.dy) < 2));
+
+        if( fast && notFar){
+
+
+          var {height, width} = Dimensions.get('window');
+          var inLowerHalf = (evt.nativeEvent.pageY > (height/2));
+          var inMiddleThird = ((evt.nativeEvent.pageX > ((width/3)*1)) && (evt.nativeEvent.pageX < ((width/3)*2)));
+
+          // console.log(evt.nativeEvent.pageX, ((width/3)*1) )
+          if( inLowerHalf && inMiddleThird ){
+            this.onPressButton();
+          }
+        }else{
+          this.onDragEnd(); 
+        }
       },
       onPanResponderTerminate: (evt, gestureState) => {
         // console.log("gesture canceled", this.store.ox);
         // this.store.dx = gestureState.dx;
+        this.store.timestamps.end = evt.timestamp;
         this.onDragEnd();
       }
     });
   }
+
+
+  onPressButton(){
+    AlertIOS.alert(
+     'View More button tapped.'
+    );
+  }
+
 
 
   updateProps(){
@@ -151,6 +183,8 @@ export default class SwipeController extends Component {
 
     // console.log(this.store .currentPage)
   }
+
+
 
   render(){
 
