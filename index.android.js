@@ -9,12 +9,13 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
 class DesignNews extends Component {
   render() {
     return (
+
       <View style={styles.container}>
         <Text style={styles.welcome}>
           Welcome to React Native!
@@ -37,6 +38,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover', // or 'stretch'
+    }
   },
   welcome: {
     fontSize: 20,

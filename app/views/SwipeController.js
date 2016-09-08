@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
-import { View, Animated, PanResponder, Dimensions, AlertIOS } from 'react-native';
+import { 
+  View, 
+  Animated, 
+  PanResponder, 
+  Dimensions, 
+  AlertIOS 
+} from 'react-native';
 import DesignNewsPost from './DesignNewsPost';
+import SafariView from 'react-native-safari-view';
+
+
 
 export default class SwipeController extends Component {
 
@@ -45,10 +54,21 @@ export default class SwipeController extends Component {
         // console.log("gesture move", this.store.ox, gestureState.dx);
         this.store.dx = gestureState.dx;
         this.store.dy = gestureState.dy;
+        // don't go past the first page
         if( this.store.currentPage == 0 ){
           if( this.store.dx > 20 ){
             this.store.dx = 20;
           }
+        }
+        // don't go past the last page
+        // console.log(this.store.currentPage, this.props.feedData.length )
+        // if( this.store.currentPage == this.props.feedData.length-1){
+        if( this.viewStackData.current ){
+         if( this.viewStackData.current.lastPost ){
+            if( this.store.dx < 20 ){
+              this.store.dx = -10;
+            }
+          } 
         }
         this.updateProps();
       },
@@ -61,7 +81,6 @@ export default class SwipeController extends Component {
         var notFar = ((Math.abs(gestureState.dx) < 2) && (Math.abs(gestureState.dy) < 2));
 
         if( fast && notFar){
-
 
           var {height, width} = Dimensions.get('window');
           var inLowerHalf = (evt.nativeEvent.pageY > (height/2));
@@ -86,9 +105,13 @@ export default class SwipeController extends Component {
 
 
   onPressButton(){
-    AlertIOS.alert(
-     'View More button tapped.'
-    );
+
+    if( this.viewStackData.current.link.length ){
+      SafariView.show({
+        url: this.viewStackData.current.link
+      });
+    }
+
   }
 
 
@@ -141,7 +164,7 @@ export default class SwipeController extends Component {
       this.store.dx = this.store.dx * ease + destinationX * (1-ease);
       // 
       if( Math.abs(destinationX - this.store.dx) <= 0.1 ){
-        console.log("animation complete")
+        // console.log("animation complete")
         // animation complete
         // this.store.dx = 0;
 
@@ -190,15 +213,13 @@ export default class SwipeController extends Component {
 
     this.styles = {
       container:{
-        backgroundColor: "#2b2b2b",
+        // backgroundColor: "#2b2b2b",
         flex: 1 
       },
     }
 
     var cx = this.store.dx;
-
     var {height, width} = Dimensions.get('window');
-
     var cLeft = (cx < 0) ? cx : cx;
     var cRotate = (cx < 0) ? String( -(cx*0.2))+"deg" : String( -(cx*0.2)) +"deg";
 
@@ -281,6 +302,8 @@ export default class SwipeController extends Component {
         </Animated.View>;
       }
 
+
+      // console.log(this.viewStackData.current)
 
 
     return(
