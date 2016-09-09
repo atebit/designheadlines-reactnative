@@ -47,15 +47,16 @@ export default class SwipeController extends Component {
 
 
       onPanResponderGrant: (evt, gestureState) => {
-        // console.log("gesture start", this.store.ox, gestureState.dx);
-        this.store.dx = 0;
-        this.store.timestamps.start = evt.nativeEvent.timestamp;
+        if( ! this.store.isAnimating ){        
+          this.store.dx = 0;
+          this.store.timestamps.start = evt.nativeEvent.timestamp;
+        }
       },
 
 
       onPanResponderMove: (evt, gestureState) => {
         if( ! this.store.isAnimating ){
-          console.log(this.store.currentPage)
+          // console.log(this.store.currentPage)
           // console.log("gesture move", this.store.ox, gestureState.dx);
           this.store.dx = gestureState.dx;
           this.store.dy = gestureState.dy;
