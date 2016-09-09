@@ -1494,43 +1494,62 @@ __d(0 /* DesignNews/index.ios.js */, function(global, require, module, exports) 
 var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(44 /* react-native */);
 
-var _DesignNewsPost=require(640 /* ./app/views/DesignNewsPost */);var _DesignNewsPost2=babelHelpers.interopRequireDefault(_DesignNewsPost);
-var _Loading=require(641 /* ./app/views/Loading */);var _Loading2=babelHelpers.interopRequireDefault(_Loading);var
+
+
+
+
+
+
+
+
+var _SwipeController=require(640 /* ./app/views/SwipeController */);var _SwipeController2=babelHelpers.interopRequireDefault(_SwipeController);
+var _Loading=require(643 /* ./app/views/Loading */);var _Loading2=babelHelpers.interopRequireDefault(_Loading);var
 
 DesignNews=function(_Component){babelHelpers.inherits(DesignNews,_Component);function DesignNews(){babelHelpers.classCallCheck(this,DesignNews);return babelHelpers.possibleConstructorReturn(this,(DesignNews.__proto__||Object.getPrototypeOf(DesignNews)).apply(this,arguments));}babelHelpers.createClass(DesignNews,[{key:'componentWillMount',value:function componentWillMount()
 
 {
 
-this._appData={};
-this._appData.feedData=[];
-this._appData.feedUrls=[
+
+this.store={};
+this.store.feedData=[];
+this.store.feedUrls=[
+"https://medium.com/feed/adjust-creative",
+"http://feeds.feedburner.com/awwwards-sites-of-the-day",
 "http://blog.invisionapp.com/feed/",
 "http://feeds.feedburner.com/CreativeBloq?format=xml",
-"https://dribbble.com/shots/popular.rss",
+"http://http://feedpress.me/uxbooth",
+"http://feeds.feedburner.com/designmodo",
+"http://feeds.feedburner.com/uxmovement",
+"https://dribbble.com/stories.rss",
 "https://www.smashingmagazine.com/feed/",
 "https://feeds.feedburner.com/fastcodesign/feed"];
 
-this._appData.feedsLoaded=0;
-this._appData.feedsTotal=this._appData.feedUrls.length;
+this.store.feedsLoaded=0;
+this.store.feedsTotal=this.store.feedUrls.length;
 }},{key:'componentDidMount',value:function componentDidMount()
 
 
 {
-for(var f in this._appData.feedUrls){
-this.fetchFeed(this._appData.feedUrls[f]);
+
+var self=this;
+setTimeout(function(){
+self.store.loaderComplete=true;
+self.startSwipeComponent();
+},4000);
+
+for(var f in this.store.feedUrls){
+this.fetchFeed(this.store.feedUrls[f]);
 }
 }},{key:'fetchFeed',value:function fetchFeed(
 
-
-
-
 url){var _this2=this;
-if(!/^http:\/\//.test(url)){
-url="http://"+url;
-}
+
+
+
 var GOOGLE_FEED_API_URL='https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
-var url=GOOGLE_FEED_API_URL+encodeURIComponent(url);
-fetch(url).
+
+var google_url=GOOGLE_FEED_API_URL+url;
+fetch(google_url).
 then(function(response){return response.json();}).
 then(function(responseData){
 _this2.onFeedLoaded(responseData.responseData);
@@ -1539,90 +1558,76 @@ done();
 }},{key:'onFeedLoaded',value:function onFeedLoaded(
 
 
-
-
 responseData){
-this._appData.feedsLoaded+=1;
+this.store.feedsLoaded+=1;
 
 if(responseData){
+
 var entries=responseData.feed.entries;
 for(var e in entries){
-this._appData.feedData.push(entries[e]);
+
+var entry=entries[e];
+
+var colors=["#462446","#B05F6D","#EB6B56","#47B39D","#E6567A","#BF4A67","#47C9AF","#337ab7"];
+var r=Math.floor(Math.random()*colors.length);
+entry.bgcolor=colors[r];
+
+entry.publisherTitle=responseData.feed.title;
+this.store.feedData.push(entry);
+
 }
 }
 
-if(this._appData.feedsLoaded==this._appData.feedsTotal){
+if(this.store.feedsLoaded==this.store.feedsTotal){
 
-this._appData.feedData.sort(function(entry1,entry2){
+this.store.feedData.sort(function(entry1,entry2){
 return Date.parse(entry1.publishedDate)-Date.parse(entry2.publishedDate);
 });
 
-this.setState({feedData:this._appData.feedData});
+this.store.feedData=this.store.feedData.reverse();
+
+this.store.feedData.push({
+publisherTitle:"Peruse Team",
+title:"That's it for now!",
+contentSnippet:"Check back later for more great design news from our favorite blogs. You can also click the link below and visit us at Adjust Creative. ;)",
+link:"http://www.adjustcreative.com",
+bgcolor:"#8054a3",
+lastPost:true});
+
+
+this.store.feedParsed=true;
+this.startSwipeComponent();
+}
+}},{key:'startSwipeComponent',value:function startSwipeComponent()
+
+
+{
+if(this.store.feedParsed&&this.store.loaderComplete){
+this.setState(this.store);
 }
 }},{key:'render',value:function render()
 
-{
 
-if(!this.state){
-return _react2.default.createElement(_Loading2.default,null);
+
+{var _Dimensions$get=
+
+_reactNative.Dimensions.get('window');var height=_Dimensions$get.height;var width=_Dimensions$get.width;
+var component=_react2.default.createElement(_Loading2.default,null);
+
+if(this.state){
+component=_react2.default.createElement(_SwipeController2.default,{feedData:this.store.feedData});
 }
-
-var data=this.state.feedData;
-
-var mainStyle={
-backgroundColor:"#000"};
-
 
 return(
-_react2.default.createElement(_reactNative.Navigator,{
 
-style:mainStyle,
+_react2.default.createElement(_reactNative.View,{style:{flex:1,width:width,height:height}},
+_react2.default.createElement(_reactNative.StatusBar,{
+backgroundColor:'transparent',
+barStyle:'light-content'}),
 
-initialRoute:{
-index:0,
-title:data[0].title,
-body:data[0].contentSnippet},
+_react2.default.createElement(_reactNative.Image,{source:require(646 /* ./assets/app_bg.png */),style:{flex:1,width:width,height:height,backgroundColor:"#1c132a"}},
+component)));
 
-
-configureScene:function configureScene(route,routeStack){return(
-_reactNative.Navigator.SceneConfigs.FloatFromRight);},
-
-
-renderScene:function renderScene(route,navigator){
-
-return(
-_react2.default.createElement(_DesignNewsPost2.default,{
-
-title:route.title,
-body:route.body,
-
-onForward:function onForward(){
-var nextIndex=route.index+1;
-
-
-
-
-
-if(data[nextIndex]){
-navigator.push({
-index:nextIndex,
-title:data[nextIndex].title,
-body:data[nextIndex].contentSnippet});
-
-}else{
-navigator.jumpTo(navigator.props.initialRoute);
-}
-
-},
-
-onBack:function onBack(){
-if(route.index>0){
-navigator.pop();
-}
-}}));
-
-
-}}));
 
 
 }}]);return DesignNews;}(_react.Component);
@@ -80858,101 +80863,632 @@ handleElement(debugID,element);
 
 module.exports=ReactDOMNullInputValuePropHook;
 }, "react/lib/ReactDOMNullInputValuePropHook.js");
-__d(640 /* DesignNews/app/views/DesignNewsPost.js */, function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(44 /* react-native */);var
+__d(640 /* DesignNews/app/views/SwipeController.js */, function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(44 /* react-native */);
 
-DesignNewsPost=function(_Component){babelHelpers.inherits(DesignNewsPost,_Component);function DesignNewsPost(){babelHelpers.classCallCheck(this,DesignNewsPost);return babelHelpers.possibleConstructorReturn(this,(DesignNewsPost.__proto__||Object.getPrototypeOf(DesignNewsPost)).apply(this,arguments));}babelHelpers.createClass(DesignNewsPost,[{key:'componentWillMount',value:function componentWillMount()
+
+
+
+
+
+var _DesignNewsPost=require(641 /* ./DesignNewsPost */);var _DesignNewsPost2=babelHelpers.interopRequireDefault(_DesignNewsPost);
+var _reactNativeSafariView=require(642 /* react-native-safari-view */);var _reactNativeSafariView2=babelHelpers.interopRequireDefault(_reactNativeSafariView);var
+
+
+
+SwipeController=function(_Component){babelHelpers.inherits(SwipeController,_Component);function SwipeController(){babelHelpers.classCallCheck(this,SwipeController);return babelHelpers.possibleConstructorReturn(this,(SwipeController.__proto__||Object.getPrototypeOf(SwipeController)).apply(this,arguments));}babelHelpers.createClass(SwipeController,[{key:'componentWillMount',value:function componentWillMount()
+
+{var _this2=this;
+
+this.csname="SwipeController";
+this.viewStackData={};
+
+this.store={
+currentPage:-2,
+cx:0,
+
+dx:0,
+dy:0,
+ox:0,
+
+timestamps:{
+start:0,
+end:0},
+
+isAnimating:false};
+
+
+
+
+
+this.updateViewStackData(true);
+
+
+this.panResponder=_reactNative.PanResponder.create({
+onStartShouldSetPanResponder:function onStartShouldSetPanResponder(evt,gestureState){return true;},
+onStartShouldSetPanResponderCapture:function onStartShouldSetPanResponderCapture(evt,gestureState){return true;},
+onMoveShouldSetPanResponder:function onMoveShouldSetPanResponder(evt,gestureState){return true;},
+onMoveShouldSetPanResponderCapture:function onMoveShouldSetPanResponderCapture(evt,gestureState){return true;},
+
+
+onPanResponderGrant:function onPanResponderGrant(evt,gestureState){
+
+_this2.store.dx=0;
+_this2.store.timestamps.start=evt.nativeEvent.timestamp;
+},
+
+
+onPanResponderMove:function onPanResponderMove(evt,gestureState){
+if(!_this2.store.isAnimating){
+console.log(_this2.store.currentPage);
+
+_this2.store.dx=gestureState.dx;
+_this2.store.dy=gestureState.dy;
+
+if(_this2.store.currentPage<=-1){
+if(_this2.store.dx>20){
+_this2.store.dx=20;
+}
+}
+
+
+
+if(_this2.viewStackData.current){
+if(_this2.viewStackData.current.lastPost){
+if(_this2.store.dx<20){
+_this2.store.dx=-10;
+}
+}
+}
+_this2.updateProps();
+
+}
+},
+
+
+onPanResponderTerminationRequest:function onPanResponderTerminationRequest(evt,gestureState){return true;},
+onPanResponderRelease:function onPanResponderRelease(evt,gestureState){
+if(!_this2.store.isAnimating){
+
+
+_this2.store.timestamps.end=evt.nativeEvent.timestamp;
+
+var fast=_this2.store.timestamps.end-_this2.store.timestamps.start<350;
+var notFar=Math.abs(gestureState.dx)<2&&Math.abs(gestureState.dy)<2;
+
+if(fast&&notFar){var _Dimensions$get=
+
+_reactNative.Dimensions.get('window');var height=_Dimensions$get.height;var width=_Dimensions$get.width;
+var inLowerHalf=evt.nativeEvent.pageY>height/2;
+var inMiddleThird=evt.nativeEvent.pageX>width/3*1&&evt.nativeEvent.pageX<width/3*2;
+
+
+if(inLowerHalf&&inMiddleThird){
+_this2.onPressButton();
+}
+}else{
+_this2.onDragEnd();
+}
+}
+},
+onPanResponderTerminate:function onPanResponderTerminate(evt,gestureState){
+if(!_this2.store.isAnimating){
+
+
+_this2.store.timestamps.end=evt.timestamp;
+_this2.onDragEnd();
+}
+}});
+
+}},{key:'onPressButton',value:function onPressButton()
+
+
+{
+
+if(this.viewStackData.current.link.length){
+_reactNativeSafariView2.default.show({
+url:this.viewStackData.current.link});
+
+}
+
+}},{key:'updateProps',value:function updateProps()
+
+
+
+{
+this.forceUpdate();
+}},{key:'onDragEnd',value:function onDragEnd()
+
+
+
+{
+if(Math.abs(this.store.dx)<200){
+this.store.isAnimating=true;
+this.animateLetGo();
+}else{
+this.store.isAnimating=true;
+this.animateFinish();
+}
+}},{key:'animateLetGo',value:function animateLetGo()
+
+{var _this3=this;
+if(this.store.isAnimating){
+var destinationX=0;
+var ease=0.7;
+
+this.store.dx=this.store.dx*ease+destinationX*(1-ease);
+
+if(Math.abs(this.store.dx)<=0.1){
+
+this.store.ox=this.store.ox+this.store.dx;
+this.store.isAnimating=false;
+}else{
+
+this.updateProps();
+requestAnimationFrame(function(){_this3.animateLetGo();});
+}
+}
+}},{key:'animateFinish',value:function animateFinish()
+
+{var _this4=this;
+if(this.store.isAnimating){
+
+var isDirectionForward=this.store.dx<0?true:false;var _Dimensions$get2=
+
+_reactNative.Dimensions.get('window');var height=_Dimensions$get2.height;var width=_Dimensions$get2.width;
+
+var destinationX=isDirectionForward?-width:width;
+var ease=0.6;
+
+this.store.dx=this.store.dx*ease+destinationX*(1-ease);
+
+if(Math.abs(destinationX-this.store.dx)<=0.1){
+
+
+
+
+this.store.ox=this.store.ox+this.store.dx;
+this.store.isAnimating=false;
+
+this.updateViewStackData(isDirectionForward);
+
+
+}else{
+
+this.updateProps();
+requestAnimationFrame(function(){_this4.animateFinish();});
+}
+}
+}},{key:'updateViewStackData',value:function updateViewStackData(
+
+
+isDirectionForward){
+
+var totalPages=this.props.feedData.length;
+
+if(isDirectionForward){
+this.store.currentPage=this.store.currentPage+1;
+this.viewStackData={
+back:this.props.feedData[this.store.currentPage],
+current:this.props.feedData[this.store.currentPage+1],
+forward:this.props.feedData[this.store.currentPage+2]};
+
+}else{
+this.store.currentPage=this.store.currentPage-1;
+this.viewStackData={
+back:this.props.feedData[this.store.currentPage],
+current:this.props.feedData[this.store.currentPage+1],
+forward:this.props.feedData[this.store.currentPage+2]};
+
+
+}
+
+
+}},{key:'componentDidMount',value:function componentDidMount()
+
+
+{var _Dimensions$get3=
+
+_reactNative.Dimensions.get('window');var height=_Dimensions$get3.height;var width=_Dimensions$get3.width;
+this.store.dx=width;
+this.store.isAnimating=true;
+this.animateIntro();
+}},{key:'animateIntro',value:function animateIntro()
+
+{var _this5=this;
+if(this.store.isAnimating){
+
+var destinationX=0;
+var ease=0.9;
+
+this.store.dx=this.store.dx*ease+destinationX*(1-ease);
+
+if(Math.abs(this.store.dx)<=0.1){
+
+this.store.ox=this.store.ox+this.store.dx;
+this.store.isAnimating=false;
+}else{
+
+this.updateProps();
+requestAnimationFrame(function(){_this5.animateIntro();});
+}
+}
+
+}},{key:'render',value:function render()
 
 
 
 {
 
-var colors=["#462446","#B05F6D","#EB6B56","#47B39D","#E6567A","#BF4A67","#47C9AF","#337ab7"];
-var r=Math.floor(Math.random()*colors.length);
-var bgcolor=colors[r];
-
 this.styles={
+container:{
+
+flex:1}};
+
+
+
+var cx=this.store.dx;var _Dimensions$get4=
+_reactNative.Dimensions.get('window');var height=_Dimensions$get4.height;var width=_Dimensions$get4.width;
+var cLeft=cx<0?cx:cx;
+var cRotate=cx<0?String(-(cx*0.2))+"deg":String(-(cx*0.2))+"deg";
+
+var currentStyle={
+position:'absolute',
+width:width,
+height:height,
+left:cLeft,
+top:Math.abs(cx*0.1),
+opacity:1-Math.abs(cx*0.004),
+transform:[
+{scale:1-Math.abs(cx*0.0008)},
+
+{perspective:800},
+
+{rotateY:cRotate},
+
+{rotate:"0deg"}]};
+
+
+
+var forwardStyle={
+position:'absolute',
+width:width,
+height:height,
+left:width+cx,
+top:0,
+opacity:1,
+transform:[
+{scale:1},
+{rotate:"0deg"}]};
+
+
+
+
+var backStyle={
+position:'absolute',
+width:width,
+height:height,
+left:cx-width,
+top:0,
+opacity:1,
+transform:[
+{scale:1},
+{rotate:"0deg"}]};
+
+
+
+
+var backView=_react2.default.createElement(_reactNative.View,null);
+if(this.viewStackData.back){
+backView=
+_react2.default.createElement(_reactNative.Animated.View,{style:backStyle},
+_react2.default.createElement(_DesignNewsPost2.default,{
+publisher:this.viewStackData.back.publisherTitle,
+title:this.viewStackData.back.title,
+body:this.viewStackData.back.contentSnippet,
+bgcolor:this.viewStackData.back.bgcolor}));
+
+}
+
+var currentView=
+_react2.default.createElement(_reactNative.Animated.View,{style:currentStyle},
+_react2.default.createElement(_DesignNewsPost2.default,{
+publisher:this.viewStackData.current.publisherTitle,
+title:this.viewStackData.current.title,
+body:this.viewStackData.current.contentSnippet,
+bgcolor:this.viewStackData.current.bgcolor}));
+
+
+var forwardView=_react2.default.createElement(_reactNative.View,null);
+if(this.viewStackData.forward){
+forwardView=
+_react2.default.createElement(_reactNative.Animated.View,{style:forwardStyle},
+_react2.default.createElement(_DesignNewsPost2.default,{
+publisher:this.viewStackData.forward.publisherTitle,
+title:this.viewStackData.forward.title,
+body:this.viewStackData.forward.contentSnippet,
+bgcolor:this.viewStackData.forward.bgcolor}));
+
+}
+
+
+
+
+
+return(
+_react2.default.createElement(_reactNative.View,babelHelpers.extends({style:this.styles.container},this.panResponder.panHandlers),
+
+backView,
+currentView,
+forwardView));
+
+
+
+}}]);return SwipeController;}(_react.Component);exports.default=SwipeController;
+}, "DesignNews/app/views/SwipeController.js");
+__d(641 /* DesignNews/app/views/DesignNewsPost.js */, function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(44 /* react-native */);var
+
+DesignNewsPost=function(_Component){babelHelpers.inherits(DesignNewsPost,_Component);function DesignNewsPost(){babelHelpers.classCallCheck(this,DesignNewsPost);return babelHelpers.possibleConstructorReturn(this,(DesignNewsPost.__proto__||Object.getPrototypeOf(DesignNewsPost)).apply(this,arguments));}babelHelpers.createClass(DesignNewsPost,[{key:'render',value:function render()
+
+
+
+{
+
+var styles={
 container:{
 flex:1,
 justifyContent:'center',
 alignItems:'center',
-backgroundColor:bgcolor,
-padding:40},
+backgroundColor:this.props.bgcolor,
+padding:20},
 
-welcome:{
-fontSize:30,
-color:"#fff",
-textAlign:'center',
-margin:10},
-
-instructions:{
+eybrow:{
+fontFamily:'Avenir',
 textAlign:'center',
 color:'#fff',
-marginBottom:5}};
+marginBottom:5,
+opacity:0.6},
+
+headline:{
+fontFamily:'Avenir',
+fontWeight:'bold',
+fontSize:40,
+lineHeight:45,
+color:"#fff",
+textAlign:'center'},
+
+body:{
+fontFamily:'Avenir',
+textAlign:'center',
+color:'#fff',
+marginBottom:5},
+
+readmore:{
+fontFamily:'Avenir',
+textAlign:'center',
+color:'#fff',
+fontWeight:'bold',
+paddingTop:10,
+paddingBottom:7,
+paddingLeft:20,
+paddingRight:20,
+borderRadius:5,
+borderWidth:0.5,
+borderColor:'#fff',
+marginTop:40,
+opacity:0.9}};
 
 
 
-}},{key:'render',value:function render()
 
-{
+var body=this.props.body;
+body=body.replace(/\s+/g,' ').trim();
+body=body.replace(new RegExp("&nbsp;","g"),"");
 
 return(
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.props.onForward},
-_react2.default.createElement(_reactNative.View,{style:this.styles.container},
-_react2.default.createElement(_reactNative.Text,{style:this.styles.welcome},
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+
+_react2.default.createElement(_reactNative.Text,{style:styles.eybrow},
+this.props.publisher),
+
+
+_react2.default.createElement(_reactNative.Text,{style:styles.headline},
 this.props.title),
 
-_react2.default.createElement(_reactNative.Text,{style:this.styles.instructions},
-this.props.body))));
+
+_react2.default.createElement(_reactNative.Text,{style:styles.body},
+body),
+
+
+_react2.default.createElement(_reactNative.Text,{style:styles.readmore},'READ MORE')));
+
 
 
 
 
 }}]);return DesignNewsPost;}(_react.Component);exports.default=DesignNewsPost;
 }, "DesignNews/app/views/DesignNewsPost.js");
-__d(641 /* DesignNews/app/views/Loading.js */, function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+__d(642 /* react-native-safari-view/index.ios.js */, function(global, require, module, exports) {
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});
+var _reactNative=require(44 /* react-native */);
+
+
+
+
+
+var NativeSafariViewManager=_reactNative.NativeModules.SafariViewManager;exports.default=
+
+
+
+
+
+{
+show:function show(options){
+if(options&&options.tintColor){
+options.tintColor=(0,_reactNative.processColor)(options.tintColor);
+}
+
+return new Promise(function(resolve,reject){
+NativeSafariViewManager.show(options,function(error){
+if(error){
+return reject(error);
+}
+
+resolve(true);
+});
+});
+},
+
+dismiss:function dismiss(){
+NativeSafariViewManager.dismiss();
+},
+
+isAvailable:function isAvailable(){
+return new Promise(function(resolve,reject){
+NativeSafariViewManager.isAvailable(function(error){
+if(error){
+return reject(error);
+}
+
+resolve(true);
+});
+});
+},
+
+addEventListener:function addEventListener(event,listener){
+if(event==='onShow'){
+return _reactNative.DeviceEventEmitter.addListener('SafariViewOnShow',listener);
+}else if(event==='onDismiss'){
+return _reactNative.NativeAppEventEmitter.addListener('SafariViewOnDismiss',listener);
+}
+},
+
+removeEventListener:function removeEventListener(event,listener){
+if(event==='onShow'){
+_reactNative.DeviceEventEmitter.removeListener('SafariViewOnShow',listener);
+}else if(event==='onDismiss'){
+_reactNative.NativeAppEventEmitter.removeListener('SafariViewOnDismiss',listener);
+}
+}};
+}, "react-native-safari-view/index.ios.js");
+__d(643 /* DesignNews/app/views/Loading.js */, function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(44 /* react-native */);var
 
-Loading=function(_Component){babelHelpers.inherits(Loading,_Component);function Loading(){babelHelpers.classCallCheck(this,Loading);return babelHelpers.possibleConstructorReturn(this,(Loading.__proto__||Object.getPrototypeOf(Loading)).apply(this,arguments));}babelHelpers.createClass(Loading,[{key:'render',value:function render()
+Loading=function(_Component){babelHelpers.inherits(Loading,_Component);function Loading(){babelHelpers.classCallCheck(this,Loading);return babelHelpers.possibleConstructorReturn(this,(Loading.__proto__||Object.getPrototypeOf(Loading)).apply(this,arguments));}babelHelpers.createClass(Loading,[{key:'componentWillMount',value:function componentWillMount()
+
+{
+this.state={
+fadeAnim:new _reactNative.Animated.Value(0),
+dropAnim:new _reactNative.Animated.Value(-300)};
+
+}},{key:'componentDidMount',value:function componentDidMount()
+
+{
+_reactNative.Animated.timing(
+this.state.fadeAnim,
+{toValue:1,duration:3000,delay:1000}).
+start();
+
+_reactNative.Animated.timing(
+this.state.dropAnim,
+{toValue:0,duration:500,ease:_reactNative.Easing.quad}).
+start();
+}},{key:'render',value:function render()
 
 {
 
-var colors=["#462446","#B05F6D","#EB6B56","#47B39D","#E6567A","#BF4A67","#47C9AF","#337ab7"];
-var r=Math.floor(Math.random()*colors.length);
-var bgcolor=colors[r];
+var logoWidth=146/2;
+var logoHeight=232/2;
 
-this.styles={
+var logoShadowWidth=443/2;
+var logoShadowHeight=839/2;
+
+
+var style={
 container:{
 flex:1,
 justifyContent:'center',
-alignItems:'center',
-backgroundColor:bgcolor},
+alignItems:'center'},
 
-welcome:{
-fontSize:30,
-color:"#fff",
-textAlign:'center',
-margin:10},
 
-instructions:{
+line1:{
+fontFamily:'Avenir',
 textAlign:'center',
 color:'#fff',
-marginBottom:5}};
+backgroundColor:"transparent"},
+
+line2:{
+color:'#9c74b3',
+backgroundColor:"transparent"},
+
+
+logo:{
+position:"relative",
+width:logoWidth,
+height:logoHeight,
+top:this.state.dropAnim},
+
+
+logoShadow:{
+position:"absolute",
+width:logoShadowWidth,
+height:logoShadowHeight,
+left:0,
+top:20,
+opacity:this.state.fadeAnim},
+
+
+logoContainer:{
+marginBottom:20},
+
+
+loadingText:{
+alignItems:'center'},
+
+
+adjust:{
+alignItems:'center',
+color:'#fff',
+opacity:0.6,
+backgroundColor:"transparent",
+fontSize:10,
+marginTop:40}};
 
 
 
 return(
-_react2.default.createElement(_reactNative.View,{style:this.styles.container},
-_react2.default.createElement(_reactNative.Text,{style:this.styles.welcome},'DesignNews'),
+_react2.default.createElement(_reactNative.View,{style:style.container},
+
+_react2.default.createElement(_reactNative.View,{style:style.logoContainer},
+_react2.default.createElement(_reactNative.Animated.Image,{source:require(644 /* ../../assets/logo_shadow.png */),style:style.logoShadow}),
+_react2.default.createElement(_reactNative.Animated.Image,{source:require(645 /* ../../assets/logo.png */),style:style.logo})),
 
 
-_react2.default.createElement(_reactNative.Text,{style:this.styles.instructions},'Loading...')));
+_react2.default.createElement(_reactNative.View,{style:style.loadingText},
+_react2.default.createElement(_reactNative.Text,{style:style.line1},'loading design industry news'),
+
+
+_react2.default.createElement(_reactNative.Text,{style:(style.line1,style.line2)},'for you to peruse'),
+
+
+
+_react2.default.createElement(_reactNative.Text,{style:style.adjust},'Made with ♥ by Adjust Creative'))));
+
 
 
 
 
 }}]);return Loading;}(_react.Component);exports.default=Loading;
 }, "DesignNews/app/views/Loading.js");
+__d(644 /* DesignNews/assets/logo_shadow.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":443,"height":839,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo_shadow.png"],"hash":"a86eb1f7148e7a102dfa484157c996dd","name":"logo_shadow","type":"png"});
+}, "DesignNews/assets/logo_shadow.png");
+__d(645 /* DesignNews/assets/logo.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":146,"height":232,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo.png"],"hash":"e89abc2f4b3f261054ca7def9a83fa73","name":"logo","type":"png"});
+}, "DesignNews/assets/logo.png");
+__d(646 /* DesignNews/assets/app_bg.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":750,"height":1334,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/app_bg.png"],"hash":"0ef1c994e2b68f8a43fc2ede1f656fdb","name":"app_bg","type":"png"});
+}, "DesignNews/assets/app_bg.png");
 ;require(192);
 ;require(0);
 //# sourceMappingURL=/index.ios.map

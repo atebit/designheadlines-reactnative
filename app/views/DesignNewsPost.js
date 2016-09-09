@@ -53,6 +53,11 @@ export default class DesignNewsPost extends Component {
       },
     }
 
+
+    var body = this.props.body;
+    body = body.replace(/\s+/g,' ').trim();
+    body = body.replace(new RegExp("&nbsp;", "g"), "");
+
     return(
       <View style={ styles.container }  >
 
@@ -65,7 +70,7 @@ export default class DesignNewsPost extends Component {
         </Text>
 
         <Text style={ styles.body}>
-          { this.props.body }
+          { body }
         </Text>
 
         <Text style={ styles.readmore }>

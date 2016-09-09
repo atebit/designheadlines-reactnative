@@ -19,7 +19,7 @@ export default class SwipeController extends Component {
     this.viewStackData = {};
 
     this.store = {
-      currentPage: -1,
+      currentPage: -2,
       cx:0, 
       // cy:0, // current
       dx:0, 
@@ -45,60 +45,74 @@ export default class SwipeController extends Component {
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
+
       onPanResponderGrant: (evt, gestureState) => {
         // console.log("gesture start", this.store.ox, gestureState.dx);
         this.store.dx = 0;
         this.store.timestamps.start = evt.nativeEvent.timestamp;
       },
+
+
       onPanResponderMove: (evt, gestureState) => {
-        // console.log("gesture move", this.store.ox, gestureState.dx);
-        this.store.dx = gestureState.dx;
-        this.store.dy = gestureState.dy;
-        // don't go past the first page
-        if( this.store.currentPage == 0 ){
-          if( this.store.dx > 20 ){
-            this.store.dx = 20;
-          }
-        }
-        // don't go past the last page
-        // console.log(this.store.currentPage, this.props.feedData.length )
-        // if( this.store.currentPage == this.props.feedData.length-1){
-        if( this.viewStackData.current ){
-         if( this.viewStackData.current.lastPost ){
-            if( this.store.dx < 20 ){
-              this.store.dx = -10;
+        if( ! this.store.isAnimating ){
+          console.log(this.store.currentPage)
+          // console.log("gesture move", this.store.ox, gestureState.dx);
+          this.store.dx = gestureState.dx;
+          this.store.dy = gestureState.dy;
+          // don't go past the first page
+          if( this.store.currentPage <= -1 ){
+            if( this.store.dx > 20 ){
+              this.store.dx = 20;
             }
-          } 
+          }
+          // don't go past the last page
+          // console.log(this.store.currentPage, this.props.feedData.length )
+          // if( this.store.currentPage == this.props.feedData.length-1){
+          if( this.viewStackData.current ){
+           if( this.viewStackData.current.lastPost ){
+              if( this.store.dx < 20 ){
+                this.store.dx = -10;
+              }
+            } 
+          }
+          this.updateProps();
+
         }
-        this.updateProps();
       },
+
+
       onPanResponderTerminationRequest: (evt, gestureState) => true,
       onPanResponderRelease: (evt, gestureState) => {
-        // this.store.dx = gestureState.dx;
-        this.store.timestamps.end = evt.nativeEvent.timestamp;
-          // just a tap really..
-        var fast = (this.store.timestamps.end - this.store.timestamps.start) < 350;
-        var notFar = ((Math.abs(gestureState.dx) < 2) && (Math.abs(gestureState.dy) < 2));
+        if( ! this.store.isAnimating ){
+          // this.store.dx = gestureState.dx;
 
-        if( fast && notFar){
+          this.store.timestamps.end = evt.nativeEvent.timestamp;
+            // just a tap really..
+          var fast = (this.store.timestamps.end - this.store.timestamps.start) < 350;
+          var notFar = ((Math.abs(gestureState.dx) < 2) && (Math.abs(gestureState.dy) < 2));
 
-          var {height, width} = Dimensions.get('window');
-          var inLowerHalf = (evt.nativeEvent.pageY > (height/2));
-          var inMiddleThird = ((evt.nativeEvent.pageX > ((width/3)*1)) && (evt.nativeEvent.pageX < ((width/3)*2)));
+          if( fast && notFar){
 
-          // console.log(evt.nativeEvent.pageX, ((width/3)*1) )
-          if( inLowerHalf && inMiddleThird ){
-            this.onPressButton();
+            var {height, width} = Dimensions.get('window');
+            var inLowerHalf = (evt.nativeEvent.pageY > (height/2));
+            var inMiddleThird = ((evt.nativeEvent.pageX > ((width/3)*1)) && (evt.nativeEvent.pageX < ((width/3)*2)));
+
+            // console.log(evt.nativeEvent.pageX, ((width/3)*1) )
+            if( inLowerHalf && inMiddleThird ){
+              this.onPressButton();
+            }
+          }else{
+            this.onDragEnd(); 
           }
-        }else{
-          this.onDragEnd(); 
         }
       },
       onPanResponderTerminate: (evt, gestureState) => {
-        // console.log("gesture canceled", this.store.ox);
-        // this.store.dx = gestureState.dx;
-        this.store.timestamps.end = evt.timestamp;
-        this.onDragEnd();
+        if( ! this.store.isAnimating ){
+          // console.log("gesture canceled", this.store.ox);
+          // this.store.dx = gestureState.dx;
+          this.store.timestamps.end = evt.timestamp;
+          this.onDragEnd();
+        }
       }
     });
   }
@@ -135,7 +149,7 @@ export default class SwipeController extends Component {
   animateLetGo(){
     if( this.store.isAnimating ){
       const destinationX = 0;
-      const ease = 0.6;
+      const ease = 0.7;
       // update the stored value
       this.store.dx = this.store.dx * ease + destinationX * (1-ease);
       // 
@@ -205,6 +219,36 @@ export default class SwipeController extends Component {
     }
 
     // console.log(this.store .currentPage)
+  }
+
+
+  componentDidMount(){
+    // console.log("COMPONENT MOUNTED!!!!!")
+    var {height, width} = Dimensions.get('window');
+    this.store.dx = width;
+    this.store.isAnimating = true;
+    this.animateIntro();
+  }
+
+  animateIntro(){
+    if( this.store.isAnimating ){
+      // console.log("animate intro")
+      const destinationX = 0;
+      const ease = 0.9;
+      // update the stored value
+      this.store.dx = this.store.dx * ease + destinationX * (1-ease);
+      // 
+      if( Math.abs(this.store.dx) <= 0.1 ){
+        // animation complete
+        this.store.ox = this.store.ox + this.store.dx; 
+        this.store.isAnimating = false;
+      }else{
+        // continue animating
+        this.updateProps();
+        requestAnimationFrame(() => {this.animateIntro()});
+      }
+    }
+
   }
 
 

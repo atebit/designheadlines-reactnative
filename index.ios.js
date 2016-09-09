@@ -34,8 +34,8 @@ class DesignNews extends Component {
       "http://http://feedpress.me/uxbooth",
       "http://feeds.feedburner.com/designmodo",
       "http://feeds.feedburner.com/uxmovement",
-      "https://dribbble.com/shots/popular.rss",
-      // "https://www.smashingmagazine.com/feed/",
+      "https://dribbble.com/stories.rss",
+      "https://www.smashingmagazine.com/feed/",
       "https://feeds.feedburner.com/fastcodesign/feed",
     ];
     this.store.feedsLoaded = 0;
@@ -148,7 +148,6 @@ class DesignNews extends Component {
 }
 
 AppRegistry.registerComponent('DesignNews', () => DesignNews); 
-
 
 
 
