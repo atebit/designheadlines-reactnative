@@ -39,23 +39,26 @@ export default class TriangleAnimationView extends Component {
     for( var x=-widthIncrement; x < width; x += widthIncrement){
       direction = (direction == "left") ? "right" : "left";
       for( var y=-heightIncrement; y < height; y += heightIncrement){
-        var x2 = x;
-        var y2 = y;
-        this.store.triangleData.push({
-          left: x2,
-          top: y2,
-          height: triangleHeight,
-          width: triangleWidth,
-          direction: direction,
-          opacity: (Math.random()*0.02)
-        });
+        // don't render every time so it feels more random
+        var createTriangle = (Math.round(Math.random()*3)>2);
+        if(createTriangle){
+          var x2 = x;
+          var y2 = y;
+          this.store.triangleData.push({
+            left: x2,
+            top: y2,
+            height: triangleHeight,
+            width: triangleWidth,
+            direction: direction,
+            opacity: (Math.random()*0.02)
+          });
+        }
       }
     }
-
   }
+  
 
   render(){
-
     var triangles = [];
     // 
     for(var i=0; i < this.store.triangleData.length; i++ ){
@@ -66,20 +69,16 @@ export default class TriangleAnimationView extends Component {
         left: data.left,
         position: "absolute"
       }
-      // don't render every time so it feels more random
-      var render = (Math.round(Math.random()*3)>2);
       //
-      if(render){
-        triangles.push(
-          <Triangle
-            key={i}
-            style={ style }
-            width={data.width}
-            height={data.height}
-            color={'#fff'}
-            direction={data.direction} />
-        );
-      }
+      triangles.push(
+        <Triangle
+          key={i}
+          style={ style }
+          width={data.width}
+          height={data.height}
+          color={'#fff'}
+          direction={data.direction} />
+      );
     }
 
     return(

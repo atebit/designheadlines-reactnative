@@ -18,7 +18,6 @@ import {
 
 import SwipeController from './app/views/SwipeController';
 import Loading from './app/views/Loading';
-import TriangleAnimationView from './app/views/animations/TriangleAnimationView';
 
 class DesignNews extends Component {
 
@@ -58,10 +57,6 @@ class DesignNews extends Component {
   }
 
   fetchFeed( url ) {
-    return false;
-    // if (!(/^http:\/\//.test(url))) {
-    //   url = "http://" + url;
-    // }
     var GOOGLE_FEED_API_URL = 'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
     // var url = GOOGLE_FEED_API_URL + encodeURIComponent(url);
     var google_url = GOOGLE_FEED_API_URL + url;
@@ -128,11 +123,10 @@ class DesignNews extends Component {
   render() {
 
     var {height, width} = Dimensions.get('window');
-    // var component = <Loading />;
-    var component = <TriangleAnimationView />;
+    var component = <Loading />;
 
     if( this.state ){
-      // component = <SwipeController feedData={this.store.feedData} />;
+      component = <SwipeController feedData={this.store.feedData} />;
     }
 
     return (
