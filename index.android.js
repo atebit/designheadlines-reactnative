@@ -136,7 +136,7 @@ class DesignNews extends Component {
 
       <View style={{flex: 1, width: width, height: height }}>
         <StatusBar
-          backgroundColor="transparent"
+          backgroundColor="#1c122b"
           barStyle="light-content" />
 
         <Image source={require('./assets/app_bg.png')} style={{flex: 1, width: width, height: height, backgroundColor:"#1c132a"}}>
