@@ -18,6 +18,7 @@ import {
 
 import SwipeController from './app/views/SwipeController';
 import Loading from './app/views/Loading';
+import TriangleAnimationView from './app/views/animations/TriangleAnimationView';
 
 class DesignNews extends Component {
 
@@ -57,6 +58,7 @@ class DesignNews extends Component {
   }
 
   fetchFeed( url ) {
+    return false;
     // if (!(/^http:\/\//.test(url))) {
     //   url = "http://" + url;
     // }
@@ -126,10 +128,11 @@ class DesignNews extends Component {
   render() {
 
     var {height, width} = Dimensions.get('window');
-    var component = <Loading />;
+    // var component = <Loading />;
+    var component = <TriangleAnimationView />;
 
     if( this.state ){
-      component = <SwipeController feedData={this.store.feedData} />;
+      // component = <SwipeController feedData={this.store.feedData} />;
     }
 
     return (
