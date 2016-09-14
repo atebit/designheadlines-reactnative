@@ -38,10 +38,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-    backgroundImage: {
-      flex: 1,
-      resizeMode: 'cover', // or 'stretch'
-    }
   },
   welcome: {
     fontSize: 20,
