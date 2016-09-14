@@ -4,7 +4,7 @@ import {
   Animated, 
   PanResponder, 
   Dimensions, 
-  AlertIOS 
+  Linking
 } from 'react-native';
 import DesignNewsPost from './DesignNewsPost';
 import SafariView from 'react-native-safari-view';
@@ -49,7 +49,8 @@ export default class SwipeController extends Component {
       onPanResponderGrant: (evt, gestureState) => {
         if( ! this.store.isAnimating ){        
           this.store.dx = 0;
-          this.store.timestamps.start = evt.nativeEvent.timestamp;
+          // console.log("START: ", evt.nativeEvent)
+          this.store.timestamps.start = evt.nativeEvent.timeStamp;
         }
       },
 
@@ -87,18 +88,20 @@ export default class SwipeController extends Component {
         if( ! this.store.isAnimating ){
           // this.store.dx = gestureState.dx;
 
-          this.store.timestamps.end = evt.nativeEvent.timestamp;
+          this.store.timestamps.end = evt.nativeEvent.timeStamp;
             // just a tap really..
-          var fast = (this.store.timestamps.end - this.store.timestamps.start) < 350;
+          var time = (this.store.timestamps.end - this.store.timestamps.start) / 100000;
+          var fast = time < 1000;
           var notFar = ((Math.abs(gestureState.dx) < 2) && (Math.abs(gestureState.dy) < 2));
 
           if( fast && notFar){
-
+            
             var {height, width} = Dimensions.get('window');
+
             var inLowerHalf = (evt.nativeEvent.pageY > (height/2));
             var inMiddleThird = ((evt.nativeEvent.pageX > ((width/3)*1)) && (evt.nativeEvent.pageX < ((width/3)*2)));
 
-            // console.log(evt.nativeEvent.pageX, ((width/3)*1) )
+
             if( inLowerHalf && inMiddleThird ){
               this.onPressButton();
             }
@@ -120,11 +123,10 @@ export default class SwipeController extends Component {
 
 
   onPressButton(){
+    console.log("on button press")
 
     if( this.viewStackData.current.link.length ){
-      SafariView.show({
-        url: this.viewStackData.current.link
-      });
+      Linking.openURL( this.viewStackData.current.link );
     }
 
   }
@@ -278,6 +280,7 @@ export default class SwipeController extends Component {
       transform: [
         {scale: 1 - Math.abs(cx*0.0008)},
 
+        // {perspective: 800},
         {perspective: 800},
         // {translateZ: -Math.abs(cx)},
         {rotateY: cRotate},

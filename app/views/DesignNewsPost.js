@@ -36,20 +36,22 @@ export default class DesignNewsPost extends Component {
         color: '#fff',
         marginBottom: 5,
       },
+      readmoreContainer: {
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#fff',
+        marginTop: 40,
+        opacity: 0.9
+      },
       readmore: {
         fontFamily: 'Avenir',
         textAlign: 'center',
         color: '#fff',
         fontWeight: 'bold',
-        paddingTop: 10,
+        paddingTop: 7,
         paddingBottom: 7,
         paddingLeft: 20,
         paddingRight: 20,
-        borderRadius: 5,
-        borderWidth: 0.5,
-        borderColor: '#fff',
-        marginTop: 40,
-        opacity: 0.9
       },
     }
 
@@ -57,6 +59,8 @@ export default class DesignNewsPost extends Component {
     var body = this.props.body;
     body = body.replace(/\s+/g,' ').trim();
     body = body.replace(new RegExp("&nbsp;", "g"), "");
+
+    // console.log( styles.readmore )
 
     return(
       <View style={ styles.container }  >
@@ -73,9 +77,11 @@ export default class DesignNewsPost extends Component {
           { body }
         </Text>
 
-        <Text style={ styles.readmore }>
-          READ MORE
-        </Text>
+        <View style={ styles.readmoreContainer }>
+          <Text style={ styles.readmore }>
+            READ MORE
+          </Text>
+        </View>
 
       </View>
     )
