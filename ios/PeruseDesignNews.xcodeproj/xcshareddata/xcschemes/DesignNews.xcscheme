@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "DesignNews.app"
-               BlueprintName = "DesignNews"
-               ReferencedContainer = "container:DesignNews.xcodeproj">
+               BuildableName = "Peruse.app"
+               BlueprintName = "PeruseDesignNews"
+               ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "DesignNewsTests.xctest"
-               BlueprintName = "DesignNewsTests"
-               ReferencedContainer = "container:DesignNews.xcodeproj">
+               BuildableName = "PeruseDesignNewsTests.xctest"
+               BlueprintName = "PeruseDesignNewsTests"
+               ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,16 +47,16 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "DesignNews.app"
-            BlueprintName = "DesignNews"
-            ReferencedContainer = "container:DesignNews.xcodeproj">
+            BuildableName = "Peruse.app"
+            BlueprintName = "PeruseDesignNews"
+            ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -70,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "DesignNews.app"
-            BlueprintName = "DesignNews"
-            ReferencedContainer = "container:DesignNews.xcodeproj">
+            BuildableName = "Peruse.app"
+            BlueprintName = "PeruseDesignNews"
+            ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -89,9 +89,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "DesignNews.app"
-            BlueprintName = "DesignNews"
-            ReferencedContainer = "container:DesignNews.xcodeproj">
+            BuildableName = "Peruse.app"
+            BlueprintName = "PeruseDesignNews"
+            ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

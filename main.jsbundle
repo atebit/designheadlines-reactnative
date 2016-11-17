@@ -80912,15 +80912,16 @@ onMoveShouldSetPanResponderCapture:function onMoveShouldSetPanResponderCapture(e
 
 
 onPanResponderGrant:function onPanResponderGrant(evt,gestureState){
-
+if(!_this2.store.isAnimating){
 _this2.store.dx=0;
 _this2.store.timestamps.start=evt.nativeEvent.timestamp;
+}
 },
 
 
 onPanResponderMove:function onPanResponderMove(evt,gestureState){
 if(!_this2.store.isAnimating){
-console.log(_this2.store.currentPage);
+
 
 _this2.store.dx=gestureState.dx;
 _this2.store.dy=gestureState.dy;
@@ -81483,11 +81484,11 @@ _react2.default.createElement(_reactNative.Text,{style:style.adjust},'Made with 
 
 }}]);return Loading;}(_react.Component);exports.default=Loading;
 }, "DesignNews/app/views/Loading.js");
-__d(644 /* DesignNews/assets/logo_shadow.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":443,"height":839,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo_shadow.png"],"hash":"a86eb1f7148e7a102dfa484157c996dd","name":"logo_shadow","type":"png"});
+__d(644 /* DesignNews/assets/logo_shadow.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":443,"height":839,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo_shadow.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"logo_shadow","type":"png"});
 }, "DesignNews/assets/logo_shadow.png");
-__d(645 /* DesignNews/assets/logo.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":146,"height":232,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo.png"],"hash":"e89abc2f4b3f261054ca7def9a83fa73","name":"logo","type":"png"});
+__d(645 /* DesignNews/assets/logo.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":146,"height":232,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"logo","type":"png"});
 }, "DesignNews/assets/logo.png");
-__d(646 /* DesignNews/assets/app_bg.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":750,"height":1334,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/app_bg.png"],"hash":"0ef1c994e2b68f8a43fc2ede1f656fdb","name":"app_bg","type":"png"});
+__d(646 /* DesignNews/assets/app_bg.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":750,"height":1334,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/app_bg.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"app_bg","type":"png"});
 }, "DesignNews/assets/app_bg.png");
 ;require(192);
 ;require(0);
