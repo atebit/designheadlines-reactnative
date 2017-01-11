@@ -253,6 +253,29 @@ export default class SwipeController extends Component {
   }
 
 
+  trimTitle( text ){
+    
+  }
+
+
+  getContentSnippet( text ){
+    // remove HTML..
+    text2 = text.replace(/<(?:.|\n)*?>/gm, '');
+    // var yourString = "The quick brown fox jumps over the lazy dog"; //replace with your string.
+    var maxLength = 200; // maximum number of characters to extract
+    // trim the string to the maximum length
+    var trimmed = text2.substr(0, maxLength);
+    //re-trim if we are in the middle of a word
+    trimmed = trimmed.substr(0, Math.min(trimmed.length, trimmed.lastIndexOf(" ")));
+    // if string is longer..
+    if( text.length > maxLength ){
+      // if last character is a period, remove it..??
+      trimmed += "...";
+    } 
+    return trimmed;
+ }
+
+
 
   render(){
 
@@ -313,6 +336,14 @@ export default class SwipeController extends Component {
       ]
     }
 
+
+
+    // console.log(" ----> viewstack data")
+    // console.log(this.viewStackData.current)
+    // return;
+
+
+
     
     var backView = <View />;
     if( this.viewStackData.back ){
@@ -321,7 +352,7 @@ export default class SwipeController extends Component {
           <DesignNewsPost 
             publisher={ this.viewStackData.back.publisherTitle } 
             title={this.viewStackData.back.title} 
-            body={this.viewStackData.back.contentSnippet}
+            body={ this.getContentSnippet(this.viewStackData.back.description) }
             bgcolor={this.viewStackData.back.bgcolor} />
         </Animated.View>; 
     }
@@ -331,7 +362,7 @@ export default class SwipeController extends Component {
         <DesignNewsPost 
           publisher={this.viewStackData.current.publisherTitle } 
           title={this.viewStackData.current.title} 
-          body={this.viewStackData.current.contentSnippet}
+          body={this.getContentSnippet(this.viewStackData.current.description) }
           bgcolor={this.viewStackData.current.bgcolor} />
       </Animated.View>;
 
@@ -342,7 +373,7 @@ export default class SwipeController extends Component {
           <DesignNewsPost 
             publisher={this.viewStackData.forward.publisherTitle } 
             title={this.viewStackData.forward.title} 
-            body={this.viewStackData.forward.contentSnippet} 
+            body={this.getContentSnippet(this.viewStackData.forward.description) } 
             bgcolor={this.viewStackData.forward.bgcolor} />
         </Animated.View>;
       }

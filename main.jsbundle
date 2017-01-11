@@ -1530,6 +1530,7 @@ this.store.feedsTotal=this.store.feedUrls.length;
 
 
 {
+console.log("did mount");
 
 var self=this;
 setTimeout(function(){
@@ -1540,30 +1541,42 @@ self.startSwipeComponent();
 for(var f in this.store.feedUrls){
 this.fetchFeed(this.store.feedUrls[f]);
 }
+
 }},{key:'fetchFeed',value:function fetchFeed(
 
 url){var _this2=this;
 
 
 
-var GOOGLE_FEED_API_URL='https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
 
-var google_url=GOOGLE_FEED_API_URL+url;
-fetch(google_url).
+var FEED_API_URL="https://api.rss2json.com/v1/api.json?rss_url=";
+
+
+
+fetch(FEED_API_URL+url).
 then(function(response){return response.json();}).
 then(function(responseData){
-_this2.onFeedLoaded(responseData.responseData);
+
+
+_this2.onFeedLoaded(responseData);
 }).
 done();
 }},{key:'onFeedLoaded',value:function onFeedLoaded(
 
 
 responseData){
+
+
+
 this.store.feedsLoaded+=1;
 
 if(responseData){
 
-var entries=responseData.feed.entries;
+var entries=responseData.items;
+if(entries){
+
+
+
 for(var e in entries){
 
 var entry=entries[e];
@@ -1576,12 +1589,17 @@ entry.publisherTitle=responseData.feed.title;
 this.store.feedData.push(entry);
 
 }
+
+}
 }
 
 if(this.store.feedsLoaded==this.store.feedsTotal){
 
+
+
+
 this.store.feedData.sort(function(entry1,entry2){
-return Date.parse(entry1.publishedDate)-Date.parse(entry2.publishedDate);
+return Date.parse(entry1.pubDate)-Date.parse(entry2.pubDate);
 });
 
 this.store.feedData=this.store.feedData.reverse();
@@ -1602,6 +1620,7 @@ this.startSwipeComponent();
 
 
 {
+
 if(this.store.feedParsed&&this.store.loaderComplete){
 this.setState(this.store);
 }
@@ -67442,7 +67461,7 @@ resizeMode:'contain'}});
 
 module.exports=NavigationHeaderBackButton;
 }, "NavigationHeaderBackButton");
-__d(527 /* react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets","httpServerLocation":"/assets/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets","width":24,"height":24,"scales":[1,1.5,2,3,4],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@1x.ios.png","/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@1.5x.ios.png","/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@2x.ios.png","/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@3x.ios.png","/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@4x.ios.png"],"hash":"61913820f2ecad1da24d2c59fb69eccd","name":"back-icon","type":"png"});
+__d(527 /* react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/Peruse/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets","httpServerLocation":"/assets/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets","width":24,"height":24,"scales":[1,1.5,2,3,4],"files":["/Users/atebit/Desktop/Peruse/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@1x.ios.png","/Users/atebit/Desktop/Peruse/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@1.5x.ios.png","/Users/atebit/Desktop/Peruse/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@2x.ios.png","/Users/atebit/Desktop/Peruse/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@3x.ios.png","/Users/atebit/Desktop/Peruse/DesignNews/node_modules/react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon@4x.ios.png"],"hash":"61913820f2ecad1da24d2c59fb69eccd","name":"back-icon","type":"png"});
 }, "react-native/Libraries/CustomComponents/NavigationExperimental/assets/back-icon.png");
 __d(528 /* NavigationHeaderStyleInterpolator */, function(global, require, module, exports) {
 
@@ -81115,6 +81134,29 @@ requestAnimationFrame(function(){_this5.animateIntro();});
 }
 }
 
+}},{key:'trimTitle',value:function trimTitle(
+
+
+text){
+
+}},{key:'getContentSnippet',value:function getContentSnippet(
+
+
+text){
+
+text2=text.replace(/<(?:.|\n)*?>/gm,'');
+
+var maxLength=200;
+
+var trimmed=text2.substr(0,maxLength);
+
+trimmed=trimmed.substr(0,Math.min(trimmed.length,trimmed.lastIndexOf(" ")));
+
+if(text.length>maxLength){
+
+trimmed+="...";
+}
+return trimmed;
 }},{key:'render',value:function render()
 
 
@@ -81179,6 +81221,14 @@ transform:[
 
 
 
+
+
+
+
+
+
+
+
 var backView=_react2.default.createElement(_reactNative.View,null);
 if(this.viewStackData.back){
 backView=
@@ -81186,7 +81236,7 @@ _react2.default.createElement(_reactNative.Animated.View,{style:backStyle},
 _react2.default.createElement(_DesignNewsPost2.default,{
 publisher:this.viewStackData.back.publisherTitle,
 title:this.viewStackData.back.title,
-body:this.viewStackData.back.contentSnippet,
+body:this.getContentSnippet(this.viewStackData.back.description),
 bgcolor:this.viewStackData.back.bgcolor}));
 
 }
@@ -81196,7 +81246,7 @@ _react2.default.createElement(_reactNative.Animated.View,{style:currentStyle},
 _react2.default.createElement(_DesignNewsPost2.default,{
 publisher:this.viewStackData.current.publisherTitle,
 title:this.viewStackData.current.title,
-body:this.viewStackData.current.contentSnippet,
+body:this.getContentSnippet(this.viewStackData.current.description),
 bgcolor:this.viewStackData.current.bgcolor}));
 
 
@@ -81207,7 +81257,7 @@ _react2.default.createElement(_reactNative.Animated.View,{style:forwardStyle},
 _react2.default.createElement(_DesignNewsPost2.default,{
 publisher:this.viewStackData.forward.publisherTitle,
 title:this.viewStackData.forward.title,
-body:this.viewStackData.forward.contentSnippet,
+body:this.getContentSnippet(this.viewStackData.forward.description),
 bgcolor:this.viewStackData.forward.bgcolor}));
 
 }
@@ -81484,11 +81534,11 @@ _react2.default.createElement(_reactNative.Text,{style:style.adjust},'Made with 
 
 }}]);return Loading;}(_react.Component);exports.default=Loading;
 }, "DesignNews/app/views/Loading.js");
-__d(644 /* DesignNews/assets/logo_shadow.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":443,"height":839,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo_shadow.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"logo_shadow","type":"png"});
+__d(644 /* DesignNews/assets/logo_shadow.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/Peruse/DesignNews/assets","httpServerLocation":"/assets/assets","width":443,"height":839,"scales":[1],"files":["/Users/atebit/Desktop/Peruse/DesignNews/assets/logo_shadow.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"logo_shadow","type":"png"});
 }, "DesignNews/assets/logo_shadow.png");
-__d(645 /* DesignNews/assets/logo.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":146,"height":232,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/logo.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"logo","type":"png"});
+__d(645 /* DesignNews/assets/logo.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/Peruse/DesignNews/assets","httpServerLocation":"/assets/assets","width":146,"height":232,"scales":[1],"files":["/Users/atebit/Desktop/Peruse/DesignNews/assets/logo.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"logo","type":"png"});
 }, "DesignNews/assets/logo.png");
-__d(646 /* DesignNews/assets/app_bg.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets","httpServerLocation":"/assets/assets","width":750,"height":1334,"scales":[1],"files":["/Users/atebit/Desktop/ReactNative_DesignRSS/DesignNews/assets/app_bg.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"app_bg","type":"png"});
+__d(646 /* DesignNews/assets/app_bg.png */, function(global, require, module, exports) {module.exports = require(166 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/atebit/Desktop/Peruse/DesignNews/assets","httpServerLocation":"/assets/assets","width":750,"height":1334,"scales":[1],"files":["/Users/atebit/Desktop/Peruse/DesignNews/assets/app_bg.png"],"hash":"11c2a5b233a26d3127cf23da6a4ca1ec","name":"app_bg","type":"png"});
 }, "DesignNews/assets/app_bg.png");
 ;require(192);
 ;require(0);

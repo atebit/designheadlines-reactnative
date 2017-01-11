@@ -44,6 +44,7 @@ class DesignNews extends Component {
 
 
   componentDidMount(){
+    console.log("did mount");
     //
     var self = this;
     setTimeout(function(){
@@ -54,48 +55,65 @@ class DesignNews extends Component {
     for( var f in this.store.feedUrls ){
       this.fetchFeed( this.store.feedUrls[f] );
     }
+
   }
 
   fetchFeed( url ) {
     // if (!(/^http:\/\//.test(url))) {
     //   url = "http://" + url;
     // }
-    var GOOGLE_FEED_API_URL = 'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
+    // var GOOGLE_FEED_API_URL = 'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
+    var FEED_API_URL = "https://api.rss2json.com/v1/api.json?rss_url="; 
     // var url = GOOGLE_FEED_API_URL + encodeURIComponent(url);
-    var google_url = GOOGLE_FEED_API_URL + url;
-    fetch( google_url )
+    // var google_url = GOOGLE_FEED_API_URL + url;
+    // console.log("fetch feed: ", FEED_API_URL + url)
+    fetch( FEED_API_URL + url )
       .then( (response) => response.json())
       .then( (responseData) => {
-        this.onFeedLoaded( responseData.responseData )
+        // console.log(responseData.responseData)
+        // return;
+        this.onFeedLoaded( responseData )
       })
       .done()
   }
 
 
   onFeedLoaded( responseData ){
+
+    // console.log(responseData)
+
     this.store.feedsLoaded += 1;
     // if the data came through, put it in a list
     if( responseData ){
       // console.log("feed loaded", responseData.feed.title);
-      var entries = responseData.feed.entries;
-      for(var e in entries){
+      var entries = responseData.items;
+      if( entries ){
+        // console.log("------ CS DEBUG ------")
+        // console.log( entries )
+        // return;
+        for(var e in entries){
 
-        var entry = entries[e];
-        // the background color
-        var colors = ["#462446","#B05F6D","#EB6B56","#47B39D","#E6567A","#BF4A67","#47C9AF","#337ab7"];
-        var r = Math.floor(Math.random()*colors.length);
-        entry.bgcolor = colors[r];
-        // publisher name
-        entry.publisherTitle = responseData.feed.title;
-        this.store.feedData.push( entry );
+          var entry = entries[e];
+          // the background color
+          var colors = ["#462446","#B05F6D","#EB6B56","#47B39D","#E6567A","#BF4A67","#47C9AF","#337ab7"];
+          var r = Math.floor(Math.random()*colors.length);
+          entry.bgcolor = colors[r];
+          // publisher name
+          entry.publisherTitle = responseData.feed.title;
+          this.store.feedData.push( entry );
 
-      } 
+        } 
+
+      }
     }
     // when all feeds are loaded (or error'd)..
     if( this.store.feedsLoaded == this.store.feedsTotal ){
+
+
+
       // sort them by published date..
       this.store.feedData.sort(function(entry1, entry2) {
-        return Date.parse(entry1.publishedDate) - Date.parse(entry2.publishedDate);
+        return Date.parse(entry1.pubDate) - Date.parse(entry2.pubDate);
       });
       // make sure the latest is in front..
       this.store.feedData = this.store.feedData.reverse();
@@ -116,6 +134,7 @@ class DesignNews extends Component {
 
 
   startSwipeComponent(){
+
     if( this.store.feedParsed && this.store.loaderComplete ){
       this.setState( this.store ); 
     }

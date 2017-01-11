@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Peruse.app"
+               BuildableName = "PeruseDesignNews.app"
                BlueprintName = "PeruseDesignNews"
                ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
             </BuildableReference>
@@ -47,7 +47,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Peruse.app"
+            BuildableName = "PeruseDesignNews.app"
             BlueprintName = "PeruseDesignNews"
             ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
          </BuildableReference>
@@ -70,11 +70,18 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Peruse.app"
+            BuildableName = "PeruseDesignNews.app"
             BlueprintName = "PeruseDesignNews"
             ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -89,7 +96,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Peruse.app"
+            BuildableName = "PeruseDesignNews.app"
             BlueprintName = "PeruseDesignNews"
             ReferencedContainer = "container:PeruseDesignNews.xcodeproj">
          </BuildableReference>
