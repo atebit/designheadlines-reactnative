@@ -87,7 +87,6 @@ export default class SwipeController extends Component {
       onPanResponderRelease: (evt, gestureState) => {
         if( ! this.store.isAnimating ){
           // this.store.dx = gestureState.dx;
-
           this.store.timestamps.end = evt.nativeEvent.timeStamp;
             // just a tap really..
           var time = (this.store.timestamps.end - this.store.timestamps.start) / 100000;
@@ -95,12 +94,11 @@ export default class SwipeController extends Component {
           var notFar = ((Math.abs(gestureState.dx) < 2) && (Math.abs(gestureState.dy) < 2));
 
           if( fast && notFar){
-            
             var {height, width} = Dimensions.get('window');
-
             var inLowerHalf = (evt.nativeEvent.pageY > (height/2));
             var inMiddleThird = ((evt.nativeEvent.pageX > ((width/3)*1)) && (evt.nativeEvent.pageX < ((width/3)*2)));
 
+            console.log('tap')
 
             if( inLowerHalf && inMiddleThird ){
               this.onPressButton();
