@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
+
 export default class DesignNewsPost extends Component {
   
 
@@ -55,12 +58,23 @@ export default class DesignNewsPost extends Component {
       },
     }
 
-
     var body = this.props.body;
+    body = body.replace(/[^\011\012\015\040-\177]/g, function(x) {
+        return '&#' + x.charCodeAt(0) + ';'
+    })
+
+
     body = body.replace(/\s+/g,' ').trim();
     body = body.replace(new RegExp("&nbsp;", "g"), "");
 
-    // console.log( styles.readmore )
+    // console.log("--> new props <--");
+    // console.log( this.props.title );
+    // console.log( entities.decode(this.props.title) )
+
+    var title = entities.decode(this.props.title);
+    title = title.replace(/[^\011\012\015\040-\177]/g, function(x) {
+        return '&#' + x.charCodeAt(0) + ';'
+    })
 
     return(
       <View style={ styles.container }  >
