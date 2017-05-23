@@ -19,7 +19,7 @@
   NSURL *jsCodeLocation;
   
   // this is for local development
-//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
+ // jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
   
   // this is for publsihing to the phone
   // $ curl http://localhost:8081/index.ios.bundle -o main.jsbundle
